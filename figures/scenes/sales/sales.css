@@ -1,0 +1,502 @@
+/* The sales dashboard figure. The window sits on the shared green ground,
+   inset from the sides and running off the bottom; the compact design is a close
+   crop on the map and the two cards it filters. */
+.sd {
+  --sd-ease: cubic-bezier(0.45, 0, 0.1, 1);
+  --sd-move: 700ms;
+}
+
+.sd-win {
+  position: absolute;
+  top: 56px;
+  left: 90px;
+  width: 940px;
+  height: 670px;
+}
+
+.sd-label {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--mo-text);
+  white-space: nowrap;
+}
+
+/* ---- Header ---- */
+
+.sd-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 30px;
+  height: 58px;
+  padding: 0 14px;
+}
+
+.sd-head__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.sd-head__group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sd-head__keys {
+  display: flex;
+  gap: 14px;
+}
+
+.sd-head__measure {
+  padding: 6px 10px;
+  border: 1px solid var(--mo-line);
+  border-radius: 8px;
+}
+
+.sd-download {
+  flex: none;
+  color: var(--mo-download);
+}
+
+/* ---- Legend keys, shared by the header and the chart ---- */
+
+.sd-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--mo-text);
+  white-space: nowrap;
+}
+
+.sd-key {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.sd-key[data-key="pro"],
+.sd-key[data-key="trial"] {
+  border-radius: 2px;
+}
+
+.sd-key[data-key="pro"],
+.sd-key[data-key="cur"] {
+  background: var(--mo-pro);
+}
+
+.sd-key[data-key="trial"],
+.sd-key[data-key="max"] {
+  background: var(--mo-trial);
+}
+
+.sd-key[data-key="prev"] {
+  background: var(--mo-py);
+}
+
+/* ---- KPI cards and the chart ---- */
+
+.sd-main {
+  display: grid;
+  flex: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: 228px;
+}
+
+.sd-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+}
+
+.sd-kpi {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 12px 10px 14px;
+}
+
+.sd-kpi__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.sd-kpi__value {
+  font-size: 16.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--mo-pro);
+}
+
+.sd-kpi__delta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--mo-text);
+  white-space: nowrap;
+}
+
+.sd-up {
+  font-size: 9px;
+  color: var(--mo-pro);
+}
+
+.sd-spark {
+  display: block;
+  flex: none;
+  align-self: flex-end;
+  overflow: visible;
+}
+
+.sd-spark__cur {
+  fill: none;
+  stroke: var(--mo-pro);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sd-spark__prev {
+  fill: var(--mo-soft);
+}
+
+
+.sd-chart {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px 10px;
+}
+
+.sd-chart__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sd-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.sd-toggle span {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: #eceeed;
+  font-size: 11px;
+  color: var(--mo-muted);
+}
+
+.sd-toggle span[data-on] {
+  background: #2b3a4f;
+  color: #fff;
+}
+
+.sd-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.sd-plot {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  margin-top: auto;
+}
+
+.sd-col {
+  position: relative;
+}
+
+.sd-bar {
+  position: absolute;
+  inset: 0 16% 0;
+  background: var(--mo-pro);
+  transform-origin: bottom;
+  transition: transform var(--sd-move) var(--sd-ease);
+}
+
+.sd-bar[data-max] {
+  background: var(--mo-trial);
+}
+
+/* Last year's figure: a short maroon rule across the bar */
+.sd-py {
+  position: absolute;
+  bottom: -1px;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  background: var(--mo-py);
+  transition: transform var(--sd-move) var(--sd-ease);
+}
+
+.sd-peak {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--mo-pro);
+  line-height: 1;
+  white-space: nowrap;
+  transform-origin: bottom;
+  transition: transform var(--sd-move) var(--sd-ease);
+}
+
+.sd-peak > * {
+  display: block;
+  translate: 0 -100%;
+}
+
+/* The year's monthly average */
+.sd-avg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed #b8bdb9;
+  transition: transform var(--sd-move) var(--sd-ease);
+}
+
+.sd-months {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  margin-top: 6px;
+  font-size: 10.5px;
+  color: var(--mo-muted);
+  text-align: center;
+}
+
+/* ---- Bottom row: the map, and the subscription charts it filters ---- */
+
+.sd-bottom {
+  display: grid;
+  flex: none;
+  /* The map lines up with the KPI cards above it, the charts with the chart */
+  grid-template-columns: calc(50% - 6px) 1fr 1fr;
+  gap: 12px;
+  height: 250px;
+}
+
+.sd-mapcard {
+  display: flex;
+  gap: 12px;
+  padding: 14px 14px 0;
+  overflow: hidden;
+}
+
+.sd-mapcard__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+.sd-hint {
+  margin-top: 3px;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--mo-muted);
+}
+
+.sd-mapcard__value {
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--mo-pro);
+}
+
+.sd-rank {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--mo-ink);
+  white-space: nowrap;
+}
+
+.sd-rank span {
+  color: var(--mo-muted);
+}
+
+.sd-map {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+.sd-map__land {
+  fill: var(--mo-land);
+  stroke: #cdd5c9;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.sd-city {
+  transition: opacity 300ms var(--sd-ease);
+}
+
+.sd-city[data-faded] {
+  opacity: 0.25;
+}
+
+.sd-city__dot {
+  fill: var(--mo-pro);
+  fill-opacity: 0.85;
+  stroke: #fff;
+  stroke-width: 1.5;
+  transition: stroke 200ms ease, stroke-width 200ms ease;
+}
+
+/* Tableau marks a selected mark with a dark outline */
+.sd-city[data-on] .sd-city__dot {
+  fill-opacity: 1;
+  stroke: var(--mo-ink);
+  stroke-width: 2;
+}
+
+.sd-city__label {
+  font-size: 10.5px;
+  fill: var(--mo-ink);
+  paint-order: stroke;
+  stroke: var(--mo-land);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.sd-city__count {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.sd-city__hit {
+  fill: transparent;
+}
+
+.sd-subs {
+  padding: 14px;
+}
+
+.sd-subs__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.sd-subs__row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.sd-subs__type {
+  font-size: 11px;
+  color: var(--mo-text);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sd-subs__track {
+  position: relative;
+  height: 16px;
+}
+
+.sd-subs__trial,
+.sd-subs__pro {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transition: transform var(--sd-move) var(--sd-ease);
+}
+
+.sd-subs__trial {
+  background: var(--mo-trial);
+}
+
+.sd-subs__pro {
+  background: var(--mo-pro);
+}
+
+.sd-dist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px;
+}
+
+.sd-dist > .mo-card__title {
+  align-self: flex-start;
+}
+
+.sd-pie {
+  position: relative;
+  margin-top: 26px;
+}
+
+.sd-pie svg {
+  display: block;
+}
+
+.sd-pie__pro {
+  fill: var(--mo-pro);
+}
+
+.sd-pie__trial {
+  fill: none;
+  stroke: var(--mo-trial);
+}
+
+.sd-pie__label {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--mo-ink);
+  translate: -50% -50%;
+}
+
+/* ---- Compact: the window cropped close on two cards and the map ---- */
+
+.sd .ss-stage[data-layout="compact"] {
+  & .sd-win {
+    top: 22px;
+    left: 22px;
+    width: 314px;
+    height: 380px;
+  }
+
+  & .mo-body {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  & .sd-kpis {
+    grid-template-rows: auto;
+    gap: 10px;
+  }
+
+  & .sd-kpi {
+    padding: 10px;
+  }
+
+  & .sd-kpi__text {
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  & .sd-mapcard {
+    justify-content: center;
+    padding: 10px 10px 0;
+  }
+}

@@ -1,0 +1,17 @@
+# Never commit raw company material
+*.MOV
+*.mov
+*.mp4
+raw/
+originals/
+.DS_Store
+
+# Private notes for Claude Code. The repo is public, and GitHub Pages serves
+# every committed file. A SessionStart hook copies DESIGN.md into whatever
+# folder a session starts in.
+CLAUDE.md
+DESIGN.md
+.claude/
+
+# Figure build tooling. The built bundle in assets/figures/ is committed.
+node_modules/

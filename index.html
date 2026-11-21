@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shariq Malik · Tableau analytics</title>
+<meta name="description" content="Sales and subscription dashboards and Tableau Prep flows built by Shariq Malik, redrawn with dummy data.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%233d8f3a' d='M2 9h3v6H2zM6.5 5h3v10h-3zM11 1h3v14h-3z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/figures/figures.css">
+<style>
+  :root {
+    --bg: #f4f5f2;
+    --ink: #1a1d1b;
+    --text: #3f4541;
+    --muted: #6a716c;
+    --line: #dcdfda;
+    --accent: #2f7a2d;
+    --wrap: 1120px;
+    --measure: 640px;
+    --gutter: 24px;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101311;
+      --ink: #eef0ed;
+      --text: #c9cec9;
+      --muted: #949b96;
+      --line: #2a2f2b;
+      --accent: #8fd16f;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #101311;
+    --ink: #eef0ed;
+    --text: #c9cec9;
+    --muted: #949b96;
+    --line: #2a2f2b;
+    --accent: #8fd16f;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap {
+    width: min(100% - 2 * var(--gutter), var(--wrap));
+    margin-inline: auto;
+  }
+
+  a { color: var(--accent); text-underline-offset: 0.2em; }
+
+  h1, h2, h3 { color: var(--ink); text-wrap: balance; }
+
+  /* ---- Header ---- */
+
+  .top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 28px 0 22px;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px;
+  }
+
+  .top b { color: var(--ink); font-weight: 600; }
+  .top span { color: var(--muted); }
+
+  /* ---- Intro ---- */
+
+  .intro { padding: 56px 0 8px; }
+
+  .intro h1 {
+    max-width: var(--measure);
+    margin: 0;
+    font-size: clamp(27px, 3.4vw, 34px);
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .intro p { max-width: var(--measure); margin: 18px 0 0; }
+  .intro .note { color: var(--muted); font-size: 15px; margin-top: 12px; }
+  .intro .tools { color: var(--muted); font-size: 14px; margin-top: 20px; }
+
+  /* ---- Figures ---- */
+
+  .work { margin: 48px 0 0; container-type: inline-size; }
+
+  /* Insights needs two charts side by side; the Cloud crop needs less */
+  .pair {
+    display: grid;
+    grid-template-columns: 620fr 476fr;
+    align-items: start;
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .pair .work { margin: 0; }
+
+  /* Space is held for each figure before its script runs, so nothing jumps.
+     Each figure switches to its phone design when its column is narrower than
+     the stage's compact.below, so the ratios follow the column, not the screen */
+  .fig { position: relative; }
+  .fig--sales { aspect-ratio: 1120 / 655; }
+  .fig--insights { max-width: 620px; aspect-ratio: 620 / 476; }
+  .fig--cloud { max-width: 476px; aspect-ratio: 476 / 476; }
+  .fig--prep { aspect-ratio: 1120 / 600; }
+
+  @container (max-width: 859px) {
+    .fig--sales { aspect-ratio: 358 / 322; }
+    .fig--prep { aspect-ratio: 358 / 310; }
+  }
+
+  @container (max-width: 519px) {
+    .fig--insights { max-width: 358px; aspect-ratio: 358 / 322; }
+  }
+
+  @container (max-width: 399px) {
+    .fig--cloud { max-width: 358px; aspect-ratio: 358 / 322; }
+  }
+
+  /* The pair stacks before either figure would drop to its phone design */
+  @media (max-width: 999px) {
+    .pair { grid-template-columns: 1fr; gap: 48px; }
+  }
+
+  .work figcaption {
+    max-width: var(--measure);
+    margin-top: 14px;
+    font-size: 15px;
+  }
+
+  .work figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Sections ---- */
+
+  section { margin-top: 80px; }
+
+  section > h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+
+  section > p { max-width: var(--measure); margin: 10px 0 0; }
+
+  .flows {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 28px 0 0;
+    padding: 24px 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .flows h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .flows p { margin: 6px 0 0; font-size: 15px; }
+
+  /* ---- The originals ---- */
+
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px 20px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .shot {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: zoom-in;
+  }
+
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: left top;
+    border-radius: 6px;
+    outline: 1px solid var(--line);
+    outline-offset: -1px;
+    background: #fff;
+    transition: opacity 0.15s ease;
+  }
+
+  @media (hover: hover) {
+    .shot:hover img { opacity: 0.86; }
+  }
+
+  .shot:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+
+  .shot b { display: block; margin-top: 10px; color: var(--ink); font-size: 14px; font-weight: 600; line-height: 1.35; }
+  .shot small { display: block; margin-top: 3px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+  .viewer {
+    width: min(100vw - 32px, 1400px);
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .viewer::backdrop { background: rgb(10 12 11 / 0.72); }
+  .viewer img { display: block; width: 100%; height: auto; max-height: calc(100dvh - 120px); object-fit: contain; background: #fff; }
+
+  .viewer footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .viewer button {
+    flex: none;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .end {
+    margin-top: 96px;
+    padding: 24px 0 40px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ---- Narrow screens ---- */
+
+  /* Below about 860px of column the figures switch to their phone designs */
+  @media (max-width: 907px) {
+    .fig--sales, .fig--prep { max-width: 520px; }
+    .flows { grid-template-columns: 1fr; gap: 18px; }
+    .shots { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    :root { --gutter: 16px; }
+    .top { flex-direction: column; gap: 2px; padding-top: 20px; }
+    .intro { padding-top: 36px; }
+    section { margin-top: 64px; }
+    .shots { gap: 22px 14px; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <b>Shariq Malik</b>
+  <span>Data &amp; analytics</span>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <h1>Sales and subscription analytics in Tableau</h1>
+    <p>I built the reporting for a point-of-sale platform used by car service centres and garages in Saudi Arabia: Tableau Prep flows that read the production SQL Server database, and dashboards in Tableau Desktop and Tableau Cloud that track customers, orders, revenue and subscriptions.</p>
+    <p class="note">The originals were built in Tableau and can’t be shared for data-privacy reasons. The figures on this page redraw them with dummy data, and the company is called Motorly here.</p>
+    <p class="tools">Tableau Desktop · Tableau Prep Builder · Tableau Cloud · Microsoft SQL Server</p>
+  </div>
+
+  <figure class="work">
+    <div class="fig fig--sales" data-figure="sales" data-ss-fill></div>
+    <figcaption><b>Sales dashboard.</b> Four KPIs against the previous year, customers by month, and subscriptions by business type and plan. The city map is the filter: pick a city and every card follows it.</figcaption>
+  </figure>
+
+  <div class="pair">
+    <figure class="work">
+      <div class="fig fig--insights" data-figure="insights"></div>
+      <figcaption><b>Insights tab.</b> The same workbook’s second view: cities ranked by revenue and by active businesses, then orders and average revenue by business type.</figcaption>
+    </figure>
+    <figure class="work">
+      <div class="fig fig--cloud" data-figure="cloud"></div>
+      <figcaption><b>Lifetime dashboard on Tableau Cloud.</b> Company-wide KPIs since launch, filters for country and month, and the split between professional and trial subscriptions.</figcaption>
+    </figure>
+  </div>
+
+  <section aria-labelledby="pipeline">
+    <h2 id="pipeline">The data behind it</h2>
+    <p>Three Tableau Prep flows read the production SQL Server database, and their outputs were published to Tableau Cloud.</p>
+    <figure class="work">
+      <div class="fig fig--prep" data-figure="prep" data-ss-fill></div>
+      <figcaption><b>Orders by location in Tableau Prep Builder.</b> Each join brings in another table. The profile pane shows the eight fields of the output.</figcaption>
+    </figure>
+    <div class="flows">
+      <div>
+        <h3>Orders by location</h3>
+        <p>Locations joined to users, then orders, then checkout records fetched with custom SQL. The output has one row per order: location, country, date, year, order and checkout IDs, and grand total.</p>
+      </div>
+      <div>
+        <h3>Car analytics</h3>
+        <p>Cars joined to the cars-to-locations table on CarID, then to locations and users, and aggregated into the Car_Analytics output.</p>
+      </div>
+      <div>
+        <h3>Subscriptions</h3>
+        <p>User package details joined to users, cleaned, and aggregated by subscription type and business type as a count of distinct users.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="originals">
+    <h2 id="originals">The originals</h2>
+    <p>Screenshots of the real workbooks, with names and numbers changed.</p>
+    <ul class="shots">
+      <li><button class="shot" type="button" data-full="img/sales-dashboard.jpg"><img src="img/sales-dashboard.jpg" width="1800" height="1171" loading="lazy" alt="The sales dashboard in Tableau, anonymised"><b>Sales dashboard</b><small>App-style layout with KPI cards, a year-on-year chart, a city map and subscription breakdowns.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/kpi-cards.jpg"><img src="img/kpi-cards.jpg" width="1212" height="634" loading="lazy" alt="KPI cards from the sales dashboard, anonymised"><b>KPI cards</b><small>Each card pairs the headline figure with this year against last year by month.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/insights.jpg"><img src="img/insights.jpg" width="1422" height="978" loading="lazy" alt="The Insights tab in Tableau, anonymised"><b>Insights tab</b><small>Cities by revenue and growth, orders and revenue by business type, service intervals and returning customers.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/tableau-online.jpg"><img src="img/tableau-online.jpg" width="1800" height="960" loading="lazy" alt="The lifetime dashboard on Tableau Cloud, anonymised"><b>Lifetime dashboard on Tableau Cloud</b><small>Company-wide KPIs since launch, subscription mix and monthly trends.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/desktop-dashboard.jpg"><img src="img/desktop-dashboard.jpg" width="1800" height="784" loading="lazy" alt="An operations dashboard in Tableau Desktop, anonymised"><b>Operations dashboard</b><small>Built in Tableau Desktop: location activity, revenue per location, a business type ranking and filters by month and country.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/prep-orders.jpg"><img src="img/prep-orders.jpg" width="1588" height="1088" loading="lazy" alt="The orders by location flow in Tableau Prep Builder"><b>Prep flow: orders by location</b><small>Locations, users, orders and checkout records joined and aggregated.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/prep-cars.jpg"><img src="img/prep-cars.jpg" width="1588" height="1088" loading="lazy" alt="The car analytics flow in Tableau Prep Builder"><b>Prep flow: car analytics</b><small>An inner join on CarID with the location junction table, then locations and users.</small></button></li>
+      <li><button class="shot" type="button" data-full="img/prep-subscriptions.jpg"><img src="img/prep-subscriptions.jpg" width="1588" height="1088" loading="lazy" alt="The subscriptions flow in Tableau Prep Builder"><b>Prep flow: subscriptions</b><small>Distinct users counted by subscription type and business type.</small></button></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap end">Shariq Malik</footer>
+
+<dialog class="viewer" aria-labelledby="viewer-title">
+  <img src="" alt="">
+  <footer>
+    <span id="viewer-title"></span>
+    <form method="dialog"><button>Close</button></form>
+  </footer>
+</dialog>
+
+<script>
+  // The originals open full size in a native dialog: Escape closes it and
+  // focus goes back to the screenshot that opened it
+  const viewer = document.querySelector('.viewer')
+  document.querySelector('.shots').addEventListener('click', (e) => {
+    const shot = e.target.closest('.shot')
+    if (!shot) return
+    const img = viewer.querySelector('img')
+    img.src = shot.dataset.full
+    img.alt = shot.querySelector('img').alt
+    viewer.querySelector('#viewer-title').textContent = `${shot.querySelector('b').textContent}. Names and numbers changed.`
+    viewer.showModal()
+  })
+  // A click on the dimmed page around the dialog closes it too
+  viewer.addEventListener('click', (e) => { if (e.target === viewer) viewer.close() })
+</script>
+<script type="module" src="assets/figures/figures.js"></script>
+</body>
+</html>

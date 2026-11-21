@@ -1,0 +1,334 @@
+/* The orders-by-location flow in Tableau Prep Builder, as a still. The window
+   sits on the shared ground like the sales figure's, running off the bottom
+   through the profile pane. */
+.pr {
+  --pr-ink: #333;
+  --pr-muted: #6b6b6b;
+  --pr-rule: #dcdcdc;
+  --pr-blue: #2f6fb5;
+}
+
+.pr-win {
+  position: absolute;
+  top: 56px;
+  left: 90px;
+  width: 940px;
+  height: 640px;
+}
+
+.pr-body {
+  background: #fff;
+  color: var(--pr-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Toolbar ---- */
+
+.pr-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 44px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--pr-rule);
+}
+
+.pr-tools {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  color: #555;
+}
+
+.pr-tools__menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.pr-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--pr-rule);
+}
+
+.pr-publish {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 22px;
+  border-radius: 2px;
+  background: #2b5d8e;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.pr-alerts {
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+/* ---- The flow ---- */
+
+.pr-canvas {
+  position: relative;
+}
+
+.pr-links {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.pr-links path {
+  fill: none;
+  stroke: #c5c9cd;
+  stroke-width: 1.5;
+}
+
+/* A step is a point on the canvas; its parts sit around it */
+.pr-step {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.pr-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  translate: -50% -50%;
+}
+
+.pr-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pr-color);
+  color: #fff;
+}
+
+.pr-join__ring {
+  fill: none;
+  stroke: #4d4d4d;
+  stroke-width: 1.4;
+}
+
+.pr-join__overlap {
+  fill: var(--pr-color);
+}
+
+.pr-clean {
+  display: block;
+  width: 62px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--pr-color);
+}
+
+.pr-aggregate {
+  color: var(--pr-color);
+}
+
+.pr-label {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  font-size: 10.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  translate: -50% 0;
+}
+
+/* Change icons: above a clean step, to the left of an input */
+.pr-changes {
+  position: absolute;
+  display: flex;
+  gap: 4px;
+  color: var(--pr-muted);
+}
+
+.pr-step[data-kind="clean"] .pr-changes {
+  bottom: 9px;
+  left: 0;
+  translate: -50% 0;
+}
+
+.pr-step[data-kind="input"] .pr-changes {
+  top: 0;
+  right: 21px;
+  translate: 0 -50%;
+}
+
+/* The selected step: Prep boxes it and offers a + to add the next step */
+.pr-selected {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  width: 84px;
+  height: 44px;
+  border: 1.5px solid #3b7dd8;
+  border-radius: 3px;
+  translate: -50% 0;
+}
+
+.pr-add {
+  position: absolute;
+  top: 0;
+  left: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--pr-blue);
+  color: #fff;
+  translate: 0 -50%;
+}
+
+/* ---- Profile pane ---- */
+
+.pr-profile__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 14px;
+  border-top: 1px solid var(--pr-rule);
+  background: #f7f7f7;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.pr-muted {
+  color: var(--pr-muted);
+}
+
+.pr-muted b {
+  color: var(--pr-ink);
+}
+
+.pr-tag {
+  padding: 1px 5px;
+  border: 1px solid #e58a3e;
+  border-radius: 2px;
+  color: #d4721f;
+  font-size: 10px;
+}
+
+.pr-vsep {
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--pr-rule);
+}
+
+.pr-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.pr-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 170px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0 8px;
+  border: 1px solid #bfbfbf;
+  color: #555;
+  font-size: 11px;
+}
+
+/* The selected step's colour runs along the top of its fields */
+.pr-fields {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  padding: 8px 14px;
+  border-top: 4px solid #a65b47;
+  background: #f2f2f2;
+}
+
+.pr-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 8px 8px 0;
+  background: #fff;
+}
+
+.pr-field__type {
+  display: flex;
+  align-items: center;
+  height: 14px;
+  color: #4a7fb6;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pr-field__name {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.pr-field__name span {
+  color: #888;
+  font-size: 10px;
+}
+
+.pr-field__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ececec;
+}
+
+.pr-bin {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 14px;
+}
+
+.pr-bin__track {
+  flex: 1;
+  min-width: 0;
+}
+
+.pr-bin__bar {
+  display: flex;
+  align-items: center;
+  height: 8px;
+  background: #e2e2e2;
+}
+
+.pr-field__bars[data-list] .pr-bin__bar {
+  height: 14px;
+  padding-left: 4px;
+}
+
+/* ---- Compact: the start of the flow, the window running off right and bottom ---- */
+
+.pr .ss-stage[data-layout="compact"] .pr-win {
+  top: 22px;
+  left: 22px;
+  width: 680px;
+  height: 360px;
+}

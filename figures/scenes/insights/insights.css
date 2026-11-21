@@ -1,0 +1,138 @@
+/* The Insights tab, as a still. The window sits on the shared ground, inset
+   from the top and left and running off the right and bottom, so the third
+   chart of each row is past the edge. */
+.in-win {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 820px;
+  height: 600px;
+}
+
+.in-head {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  height: 58px;
+  padding: 0 14px;
+}
+
+.in-sub {
+  margin-top: 8px;
+}
+
+.in-row {
+  display: grid;
+  flex: none;
+  grid-template-columns: 260px 260px;
+  align-items: start;
+  gap: 28px;
+  padding: 14px;
+}
+
+.in-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.in-chart > .mo-chart__title {
+  white-space: nowrap;
+}
+
+/* ---- Bars with a line ---- */
+
+.in-combo {
+  display: block;
+  overflow: visible;
+}
+
+.in-combo__bar {
+  fill: #5cba57;
+}
+
+.in-combo__line {
+  fill: none;
+  stroke: #24723a;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.in-ticks {
+  display: grid;
+  margin-top: -6px;
+  font-size: 10.5px;
+  color: var(--mo-text);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---- Ranked bars ---- */
+
+.in-ranked {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.in-ranked__row {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.in-ranked__name {
+  font-size: 11px;
+  color: var(--mo-text);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.in-ranked__track {
+  position: relative;
+  height: 18px;
+}
+
+.in-ranked__bar {
+  display: block;
+  height: 100%;
+  background: #4fae4c;
+}
+
+/* Graded by value, as Tableau colours a measure: the most active city darkest */
+.in-ranked[data-shade] .in-ranked__bar {
+  background: color-mix(in oklab, #0b5d33 var(--in-shade), #a6dc98);
+}
+
+/* The reference line for the average, running through every row */
+.in-ranked__avg {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  border-left: 1.5px solid #9aa09c;
+}
+
+/* ---- Compact: the header and one chart, inset on every side but the bottom ---- */
+
+.in .ss-stage[data-layout="compact"] {
+  & .in-win {
+    top: 22px;
+    left: 22px;
+    width: 314px;
+    height: 400px;
+  }
+
+  & .mo-body {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  & .in-row {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+}
